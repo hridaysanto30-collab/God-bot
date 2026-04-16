@@ -283,7 +283,23 @@ const oldFontMap = oldFontTables.reduce((map, [styled, plain]) => {
 function toGlobalFontStyle(text) {
         if (typeof text !== "string")
                 return text;
-        return Array.from(text).map(char => outgoingFontMap[oldFontMap[char] || char] || oldFontMap[char] || char).join("");
+        const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+        const parts = [];
+        let lastIndex = 0;
+        let match;
+        while ((match = urlRegex.exec(text)) !== null) {
+                if (match.index > lastIndex) {
+                        const chunk = text.slice(lastIndex, match.index);
+                        parts.push(Array.from(chunk).map(c => outgoingFontMap[oldFontMap[c] || c] || oldFontMap[c] || c).join(""));
+                }
+                parts.push(match[0]);
+                lastIndex = match.index + match[0].length;
+        }
+        if (lastIndex < text.length) {
+                const chunk = text.slice(lastIndex);
+                parts.push(Array.from(chunk).map(c => outgoingFontMap[oldFontMap[c] || c] || oldFontMap[c] || c).join(""));
+        }
+        return parts.join("");
 }
 
 function formatOutgoingMessage(form) {
