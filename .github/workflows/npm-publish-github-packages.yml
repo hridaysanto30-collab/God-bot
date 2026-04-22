@@ -1,0 +1,16 @@
+module.exports = {
+  config: {
+    name: "commandName",
+    version: "1.0",
+    author: "Azadx69x",
+    role: 0,              // 0=All  1=Admin  2=VIP  3=Premium  4=AdminBot  5=Dev  6=Creator
+    usePrefix: true,
+    description: "What this command does",
+    guide: "{pn} [args]",
+    category: "Utility",
+    cooldowns: 3
+  },
+  onStart: async function ({ api, event, args, message }) {
+    // command logic here
+  }
+};
